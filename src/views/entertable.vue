@@ -1,6 +1,5 @@
 <template>
     <div class='tableview'>
-       
        <vector></vector>
     </div>
 </template>
@@ -18,7 +17,7 @@ export default {
         }
     },
     mounted:function(){
-       
+       console.log(this);
     }
 }
 </script>

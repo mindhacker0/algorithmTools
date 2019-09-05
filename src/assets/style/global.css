@@ -1,0 +1,11 @@
+.el-input__inner{
+    height:32px !important;
+    line-height:32px !important;
+}
+/*常用的class*/
+.clear-float::after{
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+  }
