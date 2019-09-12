@@ -35,7 +35,8 @@ export default {
         bottom:0;
         left:0;
         width:100%;
-        border:1px solid rgba(23,24,25,.8);
+        border:1px solid rgba(23,24,25,.6);
+        background:rgba(32,98,231,.6);
         .begain{
             max-width:120px;
             height:32px;
