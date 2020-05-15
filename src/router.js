@@ -20,6 +20,12 @@ export default new Router({
             component: (resolve) => {
                 require(['./views/entertable.vue'], resolve);
             }
+        },{
+            path: '/login',
+            name:'login',
+            component: (resolve) => {
+                require(['./views/login.vue'], resolve);
+            }
         }
     ]
 });
