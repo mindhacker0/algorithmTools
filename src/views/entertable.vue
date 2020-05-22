@@ -1,5 +1,8 @@
 <template>
     <div class='tableview'>
+        <div class="backImage">
+            <canvas ref="backImg" :height="cavHeight" :width="cavWidth"></canvas>
+        </div>
         <div class="tabCover"><!--快捷方式-->
             <div v-for="item in appliction"
             @click="dispatchEvent(item.event)"
@@ -12,9 +15,17 @@
         <vector></vector> -->
         <fileReader 
         v-if="showFileReader"
-        width="300px"
+        width="720px"
         @execTrans="childCmd"
         ></fileReader>   
+        <snake
+        v-if="showSnake"
+        width="720px"
+        @execTrans="childCmd"></snake>
+        <RussiaBlocks
+        v-if="showRussiaBlocks"
+        width="480px"
+        @execTrans="childCmd"></RussiaBlocks>
         <taskmenu></taskmenu>
     </div>
 </template>
@@ -24,13 +35,17 @@ import taskmenu from '../components/view/taskmenu'
 import vector from './datastruct/vector'
 import meterEdit from './tools/meter-edit'
 import fileReader from './applications/fileReader'
+import snake from './applications/snake'
+import RussiaBlocks from './applications/RussiaBlocks'
 export default {
     name: "entertable",
     components:{
         meterEdit,
         vector,
         taskmenu,
-        fileReader
+        fileReader,
+        snake,
+        RussiaBlocks
     },
     computed: {
         appliction(){
@@ -40,21 +55,119 @@ export default {
     data() {
         return {
             showFileReader:false,
+            showSnake:false,
+            showRussiaBlocks:false,
+            cavWidth:document.body.offsetWidth,
+            cavHeight:document.body.offsetHeight||800, 
+            scale:5,//比例
+            rightMenu:[{//右键菜单
+                id:0,
+                icon:"",
+                label:"更换桌面背景",
+                event:"changeTableBackground",
+                decoration:""
+            }],
+            rightMenuShow:false,
+            preMenu:[],
+            cont:null,
         }
     },
     beforeCreate() {
         
     },
     mounted:function(){
-       console.log(Object.keys(document));
-       console.log(this.appliction)
+        let that=this;
+        console.log(Object.keys(document));
+        console.log(this.appliction);
+        this.cont=this.$refs.backImg.getContext("2d");
+        setTimeout(()=>{
+            //that.drawImg(that.cont);//绘制默认桌面背景
+        });
+        this.$refs.backImg.addEventListener("mousedown",(e)=>{//鼠标点击事件
+            console.log(e);
+            if(e.button===2){//右键菜单
+               that.drawRightMenu({x:e.offsetX,y:e.offsetY});
+               e.preventDefault();
+               e.stopPropagation();
+            }
+            if(e.button===0){//左键单击清除菜单
+                that.drawRightMenu({x:e.offsetX,y:e.offsetY},undefined,true);
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+        document.body.addEventListener("contextmenu",(e)=>{e.preventDefault();});//组织鼠标右键的菜单
     },methods: {
         dispatchEvent(event){
-            this.showFileReader=true;
+           event&&this[event]();
         },childCmd(o){
            this[o.fnc](...o.param);
-        },closeDialog(o){console.log(o)
+        },closeDialog(o){
             this[o]=false;
+        },handleFileReader(){
+            this.showFileReader=true;
+        },handleSnake(){
+            this.showSnake=true;
+        },handleRussiaBlocks(){
+            this.showRussiaBlocks=true;
+        },drawImg(cont){//默认的背景
+            cont.save();
+            cont.translate(800,500);
+			function creat_rect(w){
+                cont.fillStyle="RGB(51,"+(Math.random()*255)+","+(55+w*2)+")";
+                cont.fillRect(0,0,w,w);
+                if(w<1){return 0;}//宽度小于1像素停止
+                console.log(w);
+                //右边绘制
+                //((cont)=>{setTimeout(()=>{
+                    cont.save();
+                    cont.rotate(37*2*Math.PI/360);
+                    cont.translate(0,-w/5*3-w/5*4);
+                    creat_rect(w*4/5);
+                    cont.restore();       
+                    //左边绘制
+                    cont.save();
+                    cont.rotate(-53*2*Math.PI/360);
+                    cont.translate(0,-w/5*3);
+                    creat_rect(w*3/5);
+                    cont.restore();  
+                //},100)})(cont);         		      
+			}
+			creat_rect(100);
+            cont.restore();  
+        },drawRightMenu(o,active,clear){//绘制右键菜单 active
+           console.log("绘制右键菜单",o,active);
+           let that=this;
+           that.cont.save();
+           that.cont.globalCompositeOperation="source-over";
+            if(that.rightMenuShow&&that.preMenu.length>0){
+                that.cont.fillStyle="#fff";
+                that.cont.fillRect(that.preMenu[0].x,that.preMenu[0].y,100,20*that.rightMenu.length);
+                that.preMenu=[];
+                that.rightMenuShow=false;
+            }
+            if(!clear){
+                that.cont.fillStyle="#efefef";
+                that.cont.fillRect(o.x,o.y,100,20*that.rightMenu.length);
+                if(active!==undefined){
+                    that.cont.fillStyle="#392eca";
+                    that.cont.fillRect(o.x,o.y,100,20*(active+1));
+                }
+                that.rightMenu.forEach((item,index)=>{
+                        if(active!==undefined&&active===index){
+                            that.cont.fillStyle="#fff";
+                        }else{
+                            that.cont.fillStyle="#000";
+                        }
+                        that.cont.font="16px";
+                        that.cont.fillText(item.label,o.x+10,o.y+20*(index+0.6),80);
+                });
+                that.rightMenuShow=true;
+                that.preMenu.push(o);
+            }
+           that.cont.restore(); 
+        },changeTableBackground(){
+
         }
     },
 }
@@ -63,32 +176,40 @@ export default {
 .tableview{
     height:100vh;
     text-align: left;
-    padding: 10px;
-    .app_item{
+    .backImage{
+        height:inherit;
+    }
+    .tabCover{
+        position: absolute;
+        top:0;
+        left:0;
         padding: 10px;
-        width: 100px;
-        height: 140px;
-        display: inline-block;
-        vertical-align:top;
-        cursor: pointer;
-        .pic{
-            width: 100%;
-            height: 80px;
-            img{
+        .app_item{
+            padding: 10px;
+            width: 100px;
+            height: 140px;
+            display: inline-block;
+            vertical-align:top;
+            cursor: pointer;
+            .pic{
                 width: 100%;
                 height: 80px;
+                img{
+                    width: 100%;
+                    height: 80px;
+                }
             }
+            .text{
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                line-height: 20px;
+            }
+            &:hover{background:rgba(0,0,0,.1);}
         }
-        .text{
-            text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-            line-height: 20px;
-        }
-        &:hover{background:rgba(0,0,0,.1);}
     }
 }
 </style>

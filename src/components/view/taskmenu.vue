@@ -1,6 +1,6 @@
 <template>
     <div class='bot_task'>
-        <div class='begain'>所有任务</div>
+        <!-- <div class='begain'>所有任务</div> -->
     </div>
 </template>
 
