@@ -37,6 +37,8 @@ import meterEdit from './tools/meter-edit'
 import fileReader from './applications/fileReader'
 import snake from './applications/snake'
 import RussiaBlocks from './applications/RussiaBlocks'
+import md5 from 'js-md5';
+import JSEncrypt from 'jsencrypt';
 export default {
     name: "entertable",
     components:{
@@ -97,6 +99,20 @@ export default {
             }
         });
         document.body.addEventListener("contextmenu",(e)=>{e.preventDefault();});//组织鼠标右键的菜单
+        let CalcuMD5 = function (str) {
+            //str = str.toUpperCase();
+            str = md5(str);
+            return str.toUpperCase();
+        }
+        console.log(CalcuMD5("appid=f2e47fddecf1428da87f1b0fd056c320&random=512250&timestamp=1597733641234&token=dab6845186784de689899d9cee5b932c"))
+        function  RSADecode(str,key){ // 注册方法
+            let pubKey = `-----BEGIN PUBLIC KEY-----${key}-----END PUBLIC KEY-----`;// ES6 模板字符串 引用 rsa 公钥
+            let encryptStr = new JSEncrypt();
+            encryptStr.setPublicKey(pubKey); // 设置 加密公钥
+            let  data = encryptStr.encrypt(str);  // 进行加密
+            return data;
+        }
+        console.log(RSADecode("080003","dab6845186784de689899d9cee5b932c"));
     },methods: {
         dispatchEvent(event){
            event&&this[event]();

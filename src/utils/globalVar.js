@@ -1,5 +1,25 @@
 export default{
     install(Vue){
-        
+        Vue.prototype.russia_block=[//俄罗斯方块的模型
+            {name:"model1",arr:[[1,0],[1,1],[0,1]],key:0b00,center:[1,0]},
+            {name:"model1",arr:[[0,1,1],[1,1,0]],key:0b01,center:[0,1]},
+            {name:"model2",arr:[[0,1],[1,1],[1,0]],key:0b00,center:[1,1]},
+            {name:"model2",arr:[[1,1,0],[0,1,1]],key:0b01,center:[1,1]},
+            {name:"model3",arr:[[1,0],[1,1],[1,1]],key:0b00,center:[1,1]},
+            {name:"model3",arr:[[1,1,1],[1,1,0]],key:0b01,center:[1,1]},
+            {name:"model3",arr:[[1,1],[1,1],[0,1]],key:0b10,center:[0,1]},
+            {name:"model3",arr:[[0,1,1],[1,1,1]],key:0b11,center:[1,0]},
+            {name:"model4",arr:[[0,1],[1,1],[1,1]],key:0b00,center:[0,1]},
+            {name:"model4",arr:[[1,1,0],[1,1,1]],key:0b01,center:[1,0]},
+            {name:"model4",arr:[[1,1],[1,1],[1,0]],key:0b10,center:[1,1]},
+            {name:"model4",arr:[[1,1,1],[0,1,1]],key:0b11,center:[1,1]},
+            {name:"model5",arr:[[0,1],[1,1],[0,1]],key:0b00,center:[1,1]},
+            {name:"model5",arr:[[1,0,1],[1,1,1]],key:0b01,center:[1,1]},
+            {name:"model5",arr:[[1,0],[1,1],[1,0]],key:0b10,center:[0,1]},
+            {name:"model5",arr:[[1,1,1],[0,1,0]],key:0b11,center:[1,0]},
+            {name:"model6",arr:[[1],[1],[1],[1]],key:0b00,center:[0,2]},
+            {name:"model6",arr:[[1,1,1,1]],key:0b01,center:[1,0]},
+            {name:"model7",arr:[[1,1],[1,1]],key:0b00,center:[0,1]},
+        ]
     }
 }

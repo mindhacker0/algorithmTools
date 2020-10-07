@@ -7,10 +7,12 @@ import './static/style/global.css'
 import elementui from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import dragable from './directive/dragable'; //添加此行=>自定义全局指令
-import VueParticles from 'vue-particles'
+import VueParticles from 'vue-particles';
+import globalVar from "./utils/globalVar"
 Vue.use(VueParticles);
 Vue.use(elementui);
 Vue.use(dragable); //添加此行=>使用该全局指令
+Vue.use(globalVar);
 Vue.config.productionTip = false
 
 new Vue({

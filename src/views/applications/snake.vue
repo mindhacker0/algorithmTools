@@ -13,7 +13,7 @@
 </template>
 <script>
 export default {
-    name:'file-reader',
+    name:'greedy-snake',
     comments:{
         
     },
@@ -23,7 +23,7 @@ export default {
             cavWidth:720,
             cavHeight:200,
             scale:5,//比例
-            snake:[{x:0,y:0,color:"#green"},{x:5,y:0,color:"green"}],//蛇的组成数组
+            snake:[{x:0,y:0,color:"green"},{x:5,y:0,color:"green"}],//蛇的组成数组
             score:0,//得分
             speed:200,//蛇移动的间隔ms
             ctx:null,
@@ -71,7 +71,7 @@ export default {
                     that.snake.unshift({
                         x:oldele.x,
                         y:oldele.y,
-                        color:"#green"
+                        color:"green"
                     });//后面插入一个元素
                     that.score+=10;//吃掉加10分
                     that.initFood();//吃掉后新增食物
