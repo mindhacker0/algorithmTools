@@ -36,6 +36,7 @@ export default {
         console.log(this.ctx);
     },methods: {
         close(){
+            clearInterval(this.handleMove);
             this.$emit("execTrans",{fnc:"closeDialog",param:['showSnake']})
         },startGame(){//开始游戏
             let that=this;

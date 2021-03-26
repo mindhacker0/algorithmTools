@@ -38,7 +38,9 @@ import fileReader from './applications/fileReader'
 import snake from './applications/snake'
 import RussiaBlocks from './applications/RussiaBlocks'
 import md5 from 'js-md5';
+//import skulpt from 'skulpt';
 import JSEncrypt from 'jsencrypt';
+import "../pakage/InnerAction";
 export default {
     name: "entertable",
     components:{
@@ -83,7 +85,7 @@ export default {
         console.log(this.appliction);
         this.cont=this.$refs.backImg.getContext("2d");
         setTimeout(()=>{
-            //that.drawImg(that.cont);//绘制默认桌面背景
+            that.drawImg(that.cont);//绘制默认桌面背景
         });
         this.$refs.backImg.addEventListener("mousedown",(e)=>{//鼠标点击事件
             console.log(e);
@@ -104,7 +106,8 @@ export default {
             str = md5(str);
             return str.toUpperCase();
         }
-        console.log(CalcuMD5("appid=f2e47fddecf1428da87f1b0fd056c320&random=512250&timestamp=1597733641234&token=dab6845186784de689899d9cee5b932c"))
+        console.log(CalcuMD5("appid=f2e47fddecf1428da87f1b0fd056c320&random=512250&timestamp=1597733641234&token=dab6845186784de689899d9cee5b932c"));
+        console.log("code",CalcuMD5("dfmnqje4"))
         function  RSADecode(str,key){ // 注册方法
             let pubKey = `-----BEGIN PUBLIC KEY-----${key}-----END PUBLIC KEY-----`;// ES6 模板字符串 引用 rsa 公钥
             let encryptStr = new JSEncrypt();
@@ -126,30 +129,33 @@ export default {
             this.showSnake=true;
         },handleRussiaBlocks(){
             this.showRussiaBlocks=true;
-        },drawImg(cont){//默认的背景
+        },sleep(time){
+            return new Promise(function(rs,rj){
+                setTimeout(rs,time);
+            })
+        },async drawImg(cont){//默认的背景
+             let vm=this;
             cont.save();
             cont.translate(800,500);
-			function creat_rect(w){
-                cont.fillStyle="RGB(51,"+(Math.random()*255)+","+(55+w*2)+")";
+			async function creat_rect(w){
+                await vm.sleep(1);
+                cont.fillStyle="RGB(230,"+(200+parseInt(Math.random()*56))+","+(55+w*2)+")";
                 cont.fillRect(0,0,w,w);
-                if(w<1){return 0;}//宽度小于1像素停止
-                console.log(w);
+                if(w<2){return 0;}//宽度小于2像素停止
                 //右边绘制
-                //((cont)=>{setTimeout(()=>{
-                    cont.save();
-                    cont.rotate(37*2*Math.PI/360);
-                    cont.translate(0,-w/5*3-w/5*4);
-                    creat_rect(w*4/5);
-                    cont.restore();       
-                    //左边绘制
-                    cont.save();
-                    cont.rotate(-53*2*Math.PI/360);
-                    cont.translate(0,-w/5*3);
-                    creat_rect(w*3/5);
-                    cont.restore();  
-                //},100)})(cont);         		      
-			}
-			creat_rect(100);
+                cont.save();
+                cont.rotate(37*2*Math.PI/360);
+                cont.translate(0,-w/5*3-w/5*4);
+                await creat_rect(w*4/5);
+                cont.restore();       
+                //左边绘制
+                cont.save();
+                cont.rotate(-53*2*Math.PI/360);
+                cont.translate(0,-w/5*3);
+                await creat_rect(w*3/5);
+                cont.restore();          		      
+            }
+			await creat_rect(100);
             cont.restore();  
         },drawRightMenu(o,active,clear){//绘制右键菜单 active
            console.log("绘制右键菜单",o,active);
