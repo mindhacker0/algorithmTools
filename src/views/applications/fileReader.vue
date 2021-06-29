@@ -3,7 +3,7 @@
         <div class='head clear-float'>fileReader<span class='el-icon-close icon' @click="close"></span></div>
         <div class="main">
             <div class="view">
-                <textarea v-model="content" cols="40" rows="20"></textarea>
+                <textarea v-model="content" cols="40" rows="32"></textarea>
             </div>
             <div class="control">
                 <div class="fileInput">
@@ -16,6 +16,7 @@
                 </div>
                 <div class="info">
                     <div>第{{pageNum}}页</div>
+                    <div><el-input @blur="changePage" v-model="pageNum" size="small" style="width:200px"/></div>
                     <div>当前文件指针开始：{{start}},当前页面大小:{{pageSize}}Byte</div>
                 </div>
             </div>
@@ -37,26 +38,45 @@ export default {
             pageSize:0,//当前页面字节
             files:[],
             MaxPage:1024,
+            name:""
         }
     },
     mounted() {},
     methods: {
+        changePage(){
+            localStorage.setItem(this.name,this.pageNum);
+             this.calPageSize().then(res=>{
+                this.showContent();
+            });
+        },
         close(){
             this.$emit("execTrans",{fnc:"closeDialog",param:['showFileReader']})
         },getFileObj(event){//onchange事件获取file
-            console.log(event);
+            console.log(event);//\n
             this.files=event.target.files;
+            if(this.files.length >0){
+                let name = this.files[0].name;
+                this.name = name;
+                if(localStorage.getItem(name) === null){
+                    localStorage.setItem(name,0);
+                }else{
+                    this.pageNum = localStorage.getItem(name);
+                    console.log(this.pageNum);
+                }
+            }
             this.calPageSize().then(res=>{
                 this.showContent();
             })
         },prevPage(){//前一页
             this.pageNum--;
             this.pageNum<0 && (this.pageNum=0);
+            localStorage.setItem(this.name,this.pageNum);
             this.calPageSize().then(res=>{
                 this.showContent();
             })
         },nextPage(){//下一页
             this.pageNum++;
+            localStorage.setItem(this.name,this.pageNum);
             this.calPageSize().then(res=>{
                 this.showContent();
             })
@@ -131,6 +151,10 @@ export default {
                 vertical-align: top;
                 width: 50%;
                 display: inline-block;
+                textarea{
+                    // background: #e6fc65;
+                    color: #555;
+                }
             }
             .control{
                 vertical-align: top;

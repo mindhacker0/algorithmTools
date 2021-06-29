@@ -13,11 +13,11 @@
         </div>
         <!-- <meterEdit></meterEdit>
         <vector></vector> -->
-        <fileReader 
+        <file-reader 
         v-if="showFileReader"
         width="720px"
         @execTrans="childCmd"
-        ></fileReader>   
+        ></file-reader>   
         <snake
         v-if="showSnake"
         width="720px"
@@ -26,6 +26,7 @@
         v-if="showRussiaBlocks"
         width="480px"
         @execTrans="childCmd"></RussiaBlocks>
+        <component :is="'poker'" v-if="showCHinesePoker"></component>
         <taskmenu></taskmenu>
     </div>
 </template>
@@ -37,6 +38,7 @@ import meterEdit from './tools/meter-edit'
 import fileReader from './applications/fileReader'
 import snake from './applications/snake'
 import RussiaBlocks from './applications/RussiaBlocks'
+import Poker from './applications/chinesePoker'
 import md5 from 'js-md5';
 //import skulpt from 'skulpt';
 import JSEncrypt from 'jsencrypt';
@@ -49,18 +51,19 @@ export default {
         taskmenu,
         fileReader,
         snake,
-        RussiaBlocks
-    },
-    computed: {
+        RussiaBlocks,
+        Poker
+    },computed: {
         appliction(){
             return this.$store.state.appliction;
-        }
+        },
     },
     data() {
         return {
             showFileReader:false,
             showSnake:false,
             showRussiaBlocks:false,
+            showCHinesePoker:false,
             cavWidth:document.body.offsetWidth,
             cavHeight:document.body.offsetHeight||800, 
             scale:5,//比例
@@ -129,6 +132,9 @@ export default {
             this.showSnake=true;
         },handleRussiaBlocks(){
             this.showRussiaBlocks=true;
+        },handleChinesePoker(){
+            console.log('open','poker');
+            this.showCHinesePoker=true;
         },sleep(time){
             return new Promise(function(rs,rj){
                 setTimeout(rs,time);
