@@ -18,6 +18,7 @@
                     <div>第{{pageNum}}页</div>
                     <div><el-input @blur="changePage" v-model="pageNum" size="small" style="width:200px"/></div>
                     <div>当前文件指针开始：{{start}},当前页面大小:{{pageSize}}Byte</div>
+                    <div>{{printAll}}</div>
                 </div>
             </div>
         </div>
@@ -43,6 +44,9 @@ export default {
     },
     mounted() {},
     methods: {
+        printAll(){
+           return '2222'
+        },
         changePage(){
             localStorage.setItem(this.name,this.pageNum);
              this.calPageSize().then(res=>{

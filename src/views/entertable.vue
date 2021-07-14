@@ -28,11 +28,28 @@
         @execTrans="childCmd"></RussiaBlocks>
         <component :is="'poker'" v-if="showCHinesePoker"></component>
         <taskmenu></taskmenu>
+        <div class="swiper-view">
+            <swiper 
+            :listData="swiperData"
+            :page-perview="3"
+            >
+                <template slot="swiper-item" slot-scope="{data}">
+                    <div class="swiper-item">
+                        <div class="img"><img :src="data.url"/></div>
+                        <div class="info">
+                            <div class="name">{{data.name}}</div>
+                            <div class="des">{{data.des}}</div>
+                        </div>
+                    </div>
+                </template>
+            </swiper>
+        </div>
     </div>
 </template>
 
 <script>
-import taskmenu from '../components/view/taskmenu'
+import taskmenu from '../components/view/taskmenu';
+import swiper from '../components/swiper';
 import vector from './datastruct/vector'
 import meterEdit from './tools/meter-edit'
 import fileReader from './applications/fileReader'
@@ -52,7 +69,8 @@ export default {
         fileReader,
         snake,
         RussiaBlocks,
-        Poker
+        Poker,
+        swiper
     },computed: {
         appliction(){
             return this.$store.state.appliction;
@@ -77,6 +95,23 @@ export default {
             rightMenuShow:false,
             preMenu:[],
             cont:null,
+            swiperData:[{
+               url:"https://img2.baidu.com/it/u=4094910853,32052811&fm=26&fmt=auto&gp=0.jpg",
+               name:"官网抢购",
+               des:"过去玩官网抢购"
+            },{
+               url:"https://img2.baidu.com/it/u=3186302442,2514831303&fm=26&fmt=auto&gp=0.jpg",
+               name:"我去过我去过",
+               des:"个我去过我去过问问"
+            },{
+               url:"https://img0.baidu.com/it/u=1611975237,1522940013&fm=26&fmt=auto&gp=0.jpg",
+               name:"给我给我钱",
+               des:"给我过千万个全国全文"
+            },{
+               url:"https://img0.baidu.com/it/u=1611975237,1522940013&fm=26&fmt=auto&gp=0.jpg",
+               name:"服务方式",
+               des:"过千万个呵呵呵"
+            },]
         }
     },
     beforeCreate() {
@@ -204,8 +239,37 @@ export default {
 .tableview{
     height:100vh;
     text-align: left;
+    .swiper-view{
+        position:absolute;
+        left: 0;
+        top: 300px;
+        .swiper-item{
+            margin: 10px 0 0;
+            border:1px solid rgba(0,150,255,.5);
+            .img {
+                display: inline-block;
+                vertical-align: top;
+                img{
+                    width: 60px;
+                    height: 60px;
+                    display: block;
+                }
+            }
+            .info{
+                min-width: 200px;
+                padding: 0 5px;
+                display: inline-block;
+                vertical-align: top;
+                .name{
+                    font-weight: bold;
+                    padding: 10px 0;
+                }
+            }
+        }
+    }
     .backImage{
         height:inherit;
+        overflow: hidden;
     }
     .tabCover{
         position: absolute;
