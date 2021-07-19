@@ -127,11 +127,11 @@ let arr=new DefaultArray(1,2,3);
 // for(let i of myarr){
 //     console.log(i);
 // }
-async function run() {
-    for await (const value of arr) {
-        console.log("async::"+value);
-    }
-}
-run();
+// async function run() {
+//     for await (const value of arr) {
+//         console.log("async::"+value);
+//     }
+// }
+// run();
 // let newstr=new DefaultString("122344");
 // console.log(newstr.split("2"));

@@ -23,27 +23,27 @@ export default{
         ]
     }
 }
-class DefaultArray extends Array{
-    constructor(...args){
-       super(...args);
-    }
-    makeAsyncName(str){console.log("call asyncIterator:"+str);
-        return new Promise((rs,rj)=>{
-            setTimeout(()=>{rs(str)},5000);
-        });
-    }
-    *[Symbol.asyncIterator](){
-        let i=0;
-        while (this[i] != undefined) {
-            yield this.makeAsyncName(this[i]);
-            ++i;
-        }
-    }
-}
-let arr=new DefaultArray(1,2,3);
-async function run() {
-    for await (const value of arr) {
-        console.log("async::"+value);
-    }
-}
-run();
+// class DefaultArray extends Array{
+//     constructor(...args){
+//        super(...args);
+//     }
+//     makeAsyncName(str){console.log("call asyncIterator:"+str);
+//         return new Promise((rs,rj)=>{
+//             setTimeout(()=>{rs(str)},5000);
+//         });
+//     }
+//     *[Symbol.asyncIterator](){
+//         let i=0;
+//         while (this[i] != undefined) {
+//             yield this.makeAsyncName(this[i]);
+//             ++i;
+//         }
+//     }
+// }
+// let arr=new DefaultArray(1,2,3);
+// async function run() {
+//     for await (const value of arr) {
+//         console.log("async::"+value);
+//     }
+// }
+// run();

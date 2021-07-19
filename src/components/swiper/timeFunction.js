@@ -1,4 +1,4 @@
-//贝塞尔曲线，拟合时间函数
+//贝塞尔曲线，用牛顿积分拟合时间函数
 function cubicBezier(p1x, p1y, p2x, p2y){
     const ZERO_LIMIT = 1e-6;//计算精度
     // Calculate the polynomial coefficients,
@@ -74,12 +74,20 @@ function cubicBezier(p1x, p1y, p2x, p2y){
 }
 //@author zpf
 //参数调整可以参考https://cubic-bezier.com/#.17,.67,.83,.67,可以自定义时间函数导出
-//调整参数以拟合曲线
+//调整参数以拟合曲线，
 const ease = cubicBezier(.25,.1,.25,1);
 const linear = cubicBezier(0,0,1,1);
+const easeIn = cubicBezier(.42,0,1,1);
+const easeOut = cubicBezier(0,0,.58,1);
+const easeInOut = cubicBezier(.42,0,.58,1);
+const bounce = cubicBezier(0.75, -0.5, 0, 1.75);
 export {
     cubicBezier,
     ease,
     linear,
+    easeIn,
+    easeOut,
+    easeInOut,
+    bounce
 }
 

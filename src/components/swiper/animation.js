@@ -17,10 +17,10 @@ class Timeline{
                     progression = 1;
                     this.animations.delete(animation);
                     this.finishedAnimaions.add(animation);
-                    if(this.animations.size === 0) this.onFinishAll(animation);
                 }
                 let value = animation.valueFromProgression(progression);
                 object[property] = template(value);
+                if(progression === 1 && this.animations.size === 0) this.onFinishAll(this);
             }
             if(this.animations.size){
                 this.requestID = requestAnimationFrame(this.tick);
@@ -103,9 +103,7 @@ class Animation {
         this.additionProcess = 0;
     }
     valueFromProgression(progression){
-        const process = progression;
-        if((this.additionProcess + progression) > 1) process = (this.additionProcess + progression)%1;
-        return this.start + process * (this.end - this.start);
+        return this.start + progression * (this.end - this.start);
     }
 }
 class ColorAnimation{

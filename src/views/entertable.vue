@@ -33,12 +33,12 @@
             :listData="swiperData"
             :page-perview="3"
             >
-                <template slot="swiper-item" slot-scope="{data}">
+                <template slot="swiper-item" slot-scope="{item}">
                     <div class="swiper-item">
-                        <div class="img"><img :src="data.url"/></div>
+                        <div class="img"><img :src="item.url"/></div>
                         <div class="info">
-                            <div class="name">{{data.name}}</div>
-                            <div class="des">{{data.des}}</div>
+                            <div class="name">{{item.name}}</div>
+                            <div class="des">{{item.des}}</div>
                         </div>
                     </div>
                 </template>
@@ -108,7 +108,7 @@ export default {
                name:"给我给我钱",
                des:"给我过千万个全国全文"
             },{
-               url:"https://img0.baidu.com/it/u=1611975237,1522940013&fm=26&fmt=auto&gp=0.jpg",
+               url:"https://img2.baidu.com/it/u=2721557561,234914280&fm=26&fmt=auto&gp=0.jpg",
                name:"服务方式",
                des:"过千万个呵呵呵"
             },]

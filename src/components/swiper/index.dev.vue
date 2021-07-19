@@ -4,12 +4,12 @@
 :listData="swiperData"
 :page-perview="3"
 >
-    <template slot="swiper-item" slot-scope="{data}">
+    <template slot="swiper-item" slot-scope="{item}">
         <div class="swiper-item">
-            <div class="img"><img :src="data.url"/></div>
+            <div class="img"><img :src="item.url"/></div>
             <div class="info">
-                <div class="name">{{data.name}}</div>
-                <div class="des">{{data.des}}</div>
+                <div class="name">{{item.name}}</div>
+                <div class="des">{{item.des}}</div>
             </div>
         </div>
     </template>
@@ -18,16 +18,18 @@ props列表:
 listData:轮播的数据
 pagePerview:一屏展示的项数
 delay:轮播间隔
+speed:动画的速度
+direction:轮播方向 oneof[next,prev]
 -->
 <template>
-    <div ref="swiper" class='swiper'>
+    <div ref="swiper" class='gov-swiper'>
         <div class='swiper-screen'>
             <div 
             v-for="(item,idx) in swiperData" 
             :key="`swiper-item-${idx}`"
             v-bind:[`item-index-${idx}`]="''"
             class='swiper-item-wrapper'>
-                <slot name="swiper-item" :data="item"></slot>
+                <slot name="swiper-item" :item="item"></slot>
             </div>
         </div>
     </div>
@@ -52,6 +54,17 @@ export default {
             type: Number,
             default: 3000
         },
+        speed:{//动画速度毫秒
+            type: Number,
+            default: 1000
+        },
+        direction:{
+            default:"next",
+            validator: function (value) {
+                // 这个值必须匹配下列字符串中的一个
+                return ~['next', 'prev'].indexOf(value);
+            }
+        }
     },
     watch: {
         listData:{//轮播数据变化
@@ -59,6 +72,9 @@ export default {
                 const list = JSON.parse(JSON.stringify(val));
                 this.dataLen = list.length;
                 this.swiperData = list;
+                if(this.dataLen>this.pagePerview){
+                    this.$nextTick(()=>{this.initSwiper();});
+                }
             },
             deep:true,
             immediate:true
@@ -74,21 +90,17 @@ export default {
            timeLine:null,
            currentIndex:0,//当前展示的项下标
            itemHeight:0,
-           timerHandle:null,
            playState:"",
-           direction:"next",
            domHandle:null,//dom操作的锁，当一个添加操作没被释放不能再次执行添加。
         }
     },
-    mounted:function(){
+    mounted(){
         if(this.dataLen>this.pagePerview){
             this.initSwiper();
         }
     },
     beforeDestroy:function(){
         this.timeLine.pause();
-        clearTimeout(this.timerHandle);
-        this.timerHandle = null;
     },
     methods: {
         initSwiper(){
@@ -108,8 +120,8 @@ export default {
                 this.timeLine = new Timeline();
                 this.timeLine.start();
             }
-            //this.prev();
-            this.start();
+            this.playState = "runing";
+            this.play();
         },
         copyContentToFragement(){//将所有的轮播项复制到fragment便于优化
             let Swiper = this.$refs.swiper;
@@ -120,7 +132,7 @@ export default {
             });
             return itemWrap;
         },
-        cloneFirstElementToLast({beforeClone,beforeAppend}){//将第一个元素拷贝添加到最后
+        cloneFirstElementToLast({beforeClone,beforeAppend}={}){//将第一个元素拷贝添加到最后
             if(this.domHandle!==null) return;
             let Swiper = this.$refs.swiper;
             let screen = Swiper.querySelector(".swiper-screen");
@@ -135,7 +147,7 @@ export default {
                 fromTo:"firstToLast"
             });
         },
-        cloneLastToFirst({beforeClone,beforeAppend}){//将最后一个元素拷贝到最前
+        cloneLastToFirst({beforeClone,beforeAppend}={}){//将最后一个元素拷贝到最前
             if(this.domHandle!==null) return;
             let Swiper = this.$refs.swiper;
             let screen = Swiper.querySelector(".swiper-screen");
@@ -153,31 +165,14 @@ export default {
                 fromTo:"lastToFirst"
             });
         },
-        start(){
-            this.timerHandle = setTimeout(()=>{
-                this.prev();
-                this.start();
-            },2000);
-            this.playState = "runing";
-        },
-        prev(){
-            this.direction = "prev";
-            this.play();
-        },
-        next(){
-            this.direction = "next";
-            this.play();
-        },pause(){
+        pause(){
             if(this.playState === "runing"){
                 this.timeLine.pause();
-                clearTimeout(this.timerHandle);
-                this.timerHandle = null;
                 this.playState = "pause";
             }
         },resume(){
-            if(this.timerHandle===null && this.playState === "pause"){
+            if(this.playState === "pause"){
                 this.timeLine.resume();
-                this.start();
                 this.playState = "runing";
             }
         },onMouseSheel(e){
@@ -186,9 +181,8 @@ export default {
             let screen = Swiper.querySelector(".swiper-screen");
             let itemNodeList = Swiper.querySelectorAll(".swiper-item-wrapper");
             /translateY\(([\s\S]+)px\)/.exec(itemNodeList[0].style.transform);
-            let tx = Number(RegExp.$1);
+            let tx = Number(RegExp.$1)||0;
             if(tx === 0 && itemNodeList.length===this.dataLen){//等于0时，此时没有额外的dom元素,需要添加
-                console.log("opzero");
                 tx += -deltaY/20;
                 if(deltaY<0){
                     this.cloneLastToFirst({beforeAppend:itemWrap=>{
@@ -233,12 +227,15 @@ export default {
                     });
                 }
             }
+            e.stopPropagation();
         },
         onMouseEnter(e){//鼠标进入轮播区域停止，即使轮播途中也可立即停止，可正常恢复
             this.pause();
         },
         onMouseLeave(e){//鼠标离开轮播区域
-            this.resume();
+            this.timeLine.animations = new Set(); 
+            this.finishedAnimaions = new Set(); 
+            this.play();
         },play(){//轮播
             const type = this.direction;
             let nextPosition = (type==="next"?-1*this.itemHeight:0);
@@ -256,8 +253,8 @@ export default {
             }
             Array.prototype.slice.call(Swiper.querySelectorAll(".swiper-item-wrapper")).forEach((v,idx)=>{
                 /translateY\(([\s\S]+)px\)/.exec(v.style.transform);
-                let tx = Number(RegExp.$1);
-                let moveAnimation = new Animation(v.style,"transform",tx,nextPosition,1000,0,easeInOut,v=>`translateY(${v}px)`);
+                let tx = Number(RegExp.$1)||0;
+                let moveAnimation = new Animation(v.style,"transform",tx,nextPosition,this.speed,this.delay,easeInOut,v=>`translateY(${v}px)`);
                 this.timeLine.add(moveAnimation);
             });
             this.timeLine.onFinishAll = ()=>{//该次动画完成
@@ -276,14 +273,14 @@ export default {
                     this.currentIndex-=1;
                 }
                 this.$emit(type,this.currentIndex);//抛出事件
+                this.play();//递归循环轮播
             };
         }
     }
 }
 </script>
-<style lang="scss" scoped>
-   .swiper{
-       border: 1px solid #ccc;
+<style lang="less" scoped>
+   .gov-swiper{
        .swiper-screen{
             overflow: hidden;
             .swiper-item-wrapper{
