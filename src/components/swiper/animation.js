@@ -40,7 +40,7 @@ class Timeline{
     }
     resume(){
         if(this.state !== "paused") return;
-        this.state = "playing"
+        this.state = "playing";
         this.startTime += Date.now() - this.pauseTime; 
         this.tick();
     }

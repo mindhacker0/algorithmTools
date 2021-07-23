@@ -100,7 +100,6 @@ export default {
             //初始化事件
             screen.addEventListener("mouseenter",this.onMouseEnter);
             screen.addEventListener("mouseleave",this.onMouseLeave);
-            screen.addEventListener("mousewheel",this.onMouseSheel);
             // 初始化动画
             if(this.timeLine===null){
                 this.timeLine = new Timeline();
@@ -131,22 +130,6 @@ export default {
                 this.start();
                 this.playState = "runing";
             }
-        },onMouseSheel(e){
-            const {deltaY} = e;//拖动的距离0-this.dataLen
-            let hiddenPage = this.dataLen - this.pagePerview;
-            Array.prototype.slice.call(this.itemNodeList).forEach((v,index)=>{
-                /translateY\(([\s\S]+)px\)/.exec(v.style.transform);
-                let tx = Number(RegExp.$1);
-                tx += deltaY/10;
-                console.log(tx,-hiddenPage)
-                // if(tx>0){//到了上限
-                //     tx = 0; 
-                // }
-                // if(tx<-hiddenPage*this.itemHeight){//到了下限
-                //     tx = -hiddenPage*this.itemHeight; 
-                // }
-                v.style.transform = `translateY(${tx}px)`;
-            });
         },
         onMouseEnter(e){//鼠标进入轮播区域
            this.pause();
@@ -182,7 +165,6 @@ export default {
 </script>
 <style lang="scss" scoped>
    .swiper{
-       border: 1px solid #ccc;
        .swiper-screen{
            overflow: hidden;
            .swiper-item-wrapper{
