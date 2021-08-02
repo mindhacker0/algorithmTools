@@ -44,12 +44,16 @@
                 </template>
             </swiper>
         </div>
+        <div class="webgl">
+            <webgl></webgl>
+        </div>
     </div>
 </template>
 
 <script>
 import taskmenu from '../components/view/taskmenu';
 import swiper from '../components/swiper';
+import webgl from '../components/webgl';
 import vector from './datastruct/vector'
 import meterEdit from './tools/meter-edit'
 import fileReader from './applications/fileReader'
@@ -70,7 +74,8 @@ export default {
         snake,
         RussiaBlocks,
         Poker,
-        swiper
+        swiper,
+        webgl
     },computed: {
         appliction(){
             return this.$store.state.appliction;
@@ -266,6 +271,11 @@ export default {
                 }
             }
         }
+    }
+    .webgl{
+        position:absolute;
+        left: 263px;
+        top: 300px;
     }
     .backImage{
         height:inherit;
