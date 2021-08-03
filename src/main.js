@@ -8,7 +8,8 @@ import elementui from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import dragable from './directive/dragable'; //添加此行=>自定义全局指令
 import VueParticles from 'vue-particles';
-import globalVar from "./utils/globalVar"
+import globalVar from "./utils/globalVar";
+import "./components/captureJs";
 Vue.use(VueParticles);
 Vue.use(elementui);
 Vue.use(dragable); //添加此行=>使用该全局指令

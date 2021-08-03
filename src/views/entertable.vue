@@ -154,6 +154,7 @@ export default {
             return data;
         }
         console.log(RSADecode("080003","dab6845186784de689899d9cee5b932c"));
+        // this.changeSwiperData();
     },methods: {
         dispatchEvent(event){
            event&&this[event]();
@@ -231,7 +232,20 @@ export default {
            that.cont.restore(); 
         },changeTableBackground(){
 
-        }
+        },
+        // async changeSwiperData(){
+        //     for(let i=0;i<50;i++){
+        //         await new Promise((reslove,reject)=>{
+        //             setTimeout(()=>{
+        //                 this.swiperData.push({
+        //                     url:"https://img2.baidu.com/it/u=2721557561,234914280&fm=26&fmt=auto&gp=0.jpg",
+        //                     name:`新增项（${i}）`,
+        //                     des:"过千万个呵呵呵"
+        //                 });
+        //                 reslove();
+        //             },5000);
+        //         });            }
+        // }
     },
 }
 </script>

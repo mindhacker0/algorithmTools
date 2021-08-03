@@ -79,6 +79,13 @@ export default {
                 const list = JSON.parse(JSON.stringify(val));
                 this.dataLen = list.length;
                 this.swiperData = list;
+                if(this.timeLine){//数据更新清除所有的动画任务，重置轮播
+                    this.timeLine.animations = new Set(); 
+                    this.timeLine.finishedAnimaions = new Set();
+                    clearTimeout(this.timerHandle);
+                    this.timerHandle = null;
+                    this.removeEvents();
+                }
                 if(this.dataLen>this.pagePerview){
                     this.$nextTick(()=>{this.initSwiper();});
                 }
@@ -108,8 +115,16 @@ export default {
         this.timeLine.pause();
         clearTimeout(this.timerHandle);
         this.timerHandle = null;
+        this.removeEvents();
     },
     methods: {
+        removeEvents(){ //移除所有事件，防止内存泄漏
+            let Swiper = this.$refs.swiper;
+            let screen = Swiper.querySelector(".swiper-screen");
+            screen.removeEventListener("mouseenter",this.onMouseEnter);
+            screen.removeEventListener("mouseleave",this.onMouseLeave);
+            screen.removeEventListener("mousewheel",this.onMouseSheel);
+        },
         initSwiper(){
             //初始化UI
             let Swiper = this.$refs.swiper;
