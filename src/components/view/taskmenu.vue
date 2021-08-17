@@ -1,6 +1,25 @@
 <template>
     <div class='bot_task'>
-        <!-- <div class='begain'>所有任务</div> -->
+        <div class='begain' v-print="printObj">打印</div>
+        <el-table
+        id="printMe"
+        :data="tableData"
+        style="width: 100%">
+            <el-table-column
+                prop="date"
+                label="日期"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="姓名"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                prop="address"
+                label="地址">
+            </el-table-column>
+        </el-table>
     </div>
 </template>
 
@@ -12,16 +31,40 @@ export default {
     },
     data() {
         return {
-            begainMenu:[
-                {
-                   label:'',
-                   children:[]
-                },
-                {
-                   label:'',
-                   children:[]
-                }
-            ]
+            tableData: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1517 弄'
+            }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1519 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }],
+            printObj: {
+              id: "printMe",
+              popTitle: 'good print',
+              extraCss: "https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.compat.css, https://cdn.bootcdn.net/ajax/libs/hover.css/2.3.1/css/hover-min.css",
+              extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>',
+              beforeOpenCallback (vue) {
+                vue.printLoading = true
+                console.log('打开之前')
+              },
+              openCallback (vue) {
+                vue.printLoading = false
+                console.log('执行了打印')
+              },
+              closeCallback (vue) {
+                console.log('关闭了打印工具')
+              }
+            }
         }
     },
     mounted:function(){
@@ -38,6 +81,7 @@ export default {
         border:1px solid rgba(23,24,25,.6);
         background:rgba(32,98,231,.6);
         .begain{
+            margin-left: 600px;
             max-width:120px;
             height:32px;
             line-height:32px;

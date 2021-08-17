@@ -114,7 +114,7 @@ export default {
         "float cos = cos(radian);" +
         //求解旋转角度正弦值
         "float sin = sin(radian);" +
-       //引用上面的计算数据，创建绕x轴旋转矩阵
+        //引用上面的计算数据，创建绕x轴旋转矩阵
            // 1      0      0   0
            // 0   cosα   sinα   0
            // 0  -sinα   cosα   0
