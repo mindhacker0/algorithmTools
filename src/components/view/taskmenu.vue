@@ -1,6 +1,6 @@
 <template>
     <div class='bot_task'>
-        <div class='begain' v-print="printObj">打印</div>
+        <div class='begain' @click="newPrint">打印</div>
         <el-table
         id="printMe"
         :data="tableData"
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import Print from "../../pakage/printJs";
 export default {
     name: "tasklist",
     components:{
@@ -50,6 +51,7 @@ export default {
             }],
             printObj: {
               id: "printMe",
+              preview:true,
               popTitle: 'good print',
               extraCss: "https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.compat.css, https://cdn.bootcdn.net/ajax/libs/hover.css/2.3.1/css/hover-min.css",
               extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>',
@@ -69,6 +71,13 @@ export default {
     },
     mounted:function(){
        
+    },
+    methods:{
+        newPrint(){
+            new Print({
+                el:"#printMe"
+            })
+        }
     }
 }
 </script>
