@@ -151,7 +151,44 @@ export default {
       //LINE_LOOP模式从第五个点开始绘制四个点
        gl.drawArrays(gl.LINE_LOOP,4,4);
        //LINES模式绘制后8个点
-       gl.drawArrays(gl.LINE_STRIP,8,8);
+       gl.drawArrays(gl.LINES,8,8);
+    },
+    draw3DWithIndex(){
+        const { gl } = this;
+        var data = new Float32Array([
+          0.5,  0.5,  0.5,//顶点0
+          -0.5,  0.5,  0.5,//顶点1
+          -0.5, -0.5,  0.5,//顶点2
+          0.5, -0.5,  0.5,//顶点3
+          0.5,  0.5, -0.5,//顶点4
+          -0.5,  0.5, -0.5,//顶点5
+          -0.5, -0.5, -0.5,//顶点6
+          0.5, -0.5, -0.5,//顶点7
+        ]);
+        //        顶点索引数组
+        var indexes = new Uint8Array([
+    //        前四个点
+            0,1,2,3,
+    //        后四个顶点
+            4,5,6,7,
+    //        前后对应点
+            0,4,
+            1,5,
+            2,6,
+            3,7
+        ]);
+        //创建缓冲区对象
+        var indexesBuffer=gl.createBuffer();
+        //绑定缓冲区对象
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexesBuffer);
+        //索引数组indexes数据传入缓冲区
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indexes,gl.STATIC_DRAW);
+        //LINE_LOOP模式绘制前四个点
+        gl.drawElements(gl.LINE_LOOP,4,gl.UNSIGNED_BYTE,0);
+        //LINE_LOOP模式从第五个点开始绘制四个点
+        gl.drawElements(gl.LINE_LOOP,4,gl.UNSIGNED_BYTE,4);
+        //LINES模式绘制后8个点
+        gl.drawElements(gl.LINES, 8, gl.UNSIGNED_BYTE, 8);
     },
     initShader(vertexShaderSource, fragShaderSource) {
       const { gl } = this;
