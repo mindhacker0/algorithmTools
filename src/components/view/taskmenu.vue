@@ -3,23 +3,24 @@
         <div class='begain' @click="newPrint">打印</div>
         <el-table
         id="printMe"
-        :data="tableData"
-        style="width: 100%">
-            <el-table-column
-                prop="date"
-                label="日期"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                label="地址">
-            </el-table-column>
-        </el-table>
+    :data="tableData"
+    stripe
+    style="width: 100%">
+    <el-table-column
+      prop="date"
+      label="日期"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="姓名"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="address"
+      label="地址">
+    </el-table-column>
+  </el-table>
     </div>
 </template>
 
@@ -75,7 +76,8 @@ export default {
     methods:{
         newPrint(){
             new Print({
-                el:"#printMe"
+                el:"#printMe",
+                title:"小白白"
             })
         }
     }

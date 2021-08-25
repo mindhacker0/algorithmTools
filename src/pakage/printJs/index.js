@@ -1,3 +1,4 @@
+import styleEnum from "./styleEnum";
 function GUUID(prefix){//random key,to generate class names
     var s = [];
     var hexDigits = "0123456789abcdef";
@@ -17,22 +18,22 @@ const standards = {
 };
 class DomNode{//dom node
     constructor(element){
-        if(!element instanceof HTMLElement) return new Error(element+"is not a HTMLElement");
+        if(!(element instanceof HTMLElement)) return new Error(element+"is not a HTMLElement");
         this.style = this.getStaticStyle(element);
         this.className = GUUID("print-");
         this.nodeType = element.nodeType;
         this.nodeName = element.nodeName.toLowerCase();
-        this.standard = standards.html5;
         this.childNodes = [];
     }
     getStaticStyle(element){//compute element styles
        const allStyles =  window.getComputedStyle(element);
        const style = new Map();
-       for(var i in allStyles){
-           if(isNaN(i) && allStyles[i]){
-               style.set(i.replace(/[A-Z]/g,function(value){ return "-"+value}),allStyles[i]);
-           }
+       for(var i of styleEnum){
+            if(typeof allStyles[i]!=="undefined" && allStyles[i]!==''){
+                style.set(i.replace(/[A-Z]/g,function(value){ return "-"+value.toLocaleLowerCase()}),allStyles[i]);
+            }
        }
+       console.log(allStyles);
        return style;
     }
 }
@@ -48,6 +49,7 @@ class Print{
         this.domTree = null;
         this.title = title||"打印标题";
         this.frame = null;
+        this.standard = standards.html5;
         this.styleSheets = new Map();
         this.makeCloneDomWithStyle();
         this.docType = this.getDocType();
@@ -81,8 +83,8 @@ class Print{
         let iframe = document.createElement('iframe');
         iframe.style.border = '0px';
         iframe.style.position = 'absolute';
-        // iframe.style.width = '0px';
-        // iframe.style.height = '0px';
+        iframe.style.width = '100%';
+        iframe.style.height = '400px';
         iframe.style.right = '0px';
         iframe.style.top = '0px';
         iframe.setAttribute('id', "printjs-iframe");
@@ -104,7 +106,7 @@ class Print{
         var dtd = this.standard === standards.loose ? 'loose' : 'strict';
         return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01${transitional}//EN" "http://www.w3.org/TR/html4/${dtd}.dtd">`;
     }
-    getHead() {
+    getHead() {//resolve dom style to generate class
         let links = '';
         let style = '';
         // 复制所有link标签
@@ -122,7 +124,7 @@ class Print{
         });
         return `<head><title>${this.title}</title>${links}<style type="text/css">${style}</style></head>`;
     }
-    getBody(){
+    getBody(){//render dm tree.
         let wrapper = document.createDocumentFragment();
         function renderElement(vNode,root){
             if(vNode instanceof DomNode){
