@@ -1,11 +1,11 @@
 //枚举需要被考虑的css属性
 const fontStyle = [//这些属性会被继承
     "font",
-    "color","fontSize","fontStretch","fontFamily","fontWeight",
-    "textAlign","lineHeight","fontStyle","fontWeight",
-    "wordWrap","wordSpacing","wordBreak","whiteSpace","fontVariant",
-    "textShadow","textTransform","textSizeAdjust","textOrientation","textIndent",
-    "textAlignLast","letterSpacing","lineBreak","listStyle",
+    "color", "fontSize", "fontStretch", "fontFamily", "fontWeight",
+    "textAlign", "lineHeight", "fontStyle", "fontWeight",
+    "wordWrap", "wordSpacing", "wordBreak", "whiteSpace", "fontVariant",
+    "textShadow", "textTransform", "textSizeAdjust", "textOrientation", "textIndent",
+    "textAlignLast", "letterSpacing", "lineBreak", "listStyle",
 ];
 const border = [
     "border",
@@ -72,23 +72,22 @@ const border = [
 
 ]
 const boxStyle = [
-    "overflowAnchor","overflowWrap","overflow","overflowX","overflowY","textOverflow","textDecoration",
-    "visibility","zoom","zIndex","objectFit","objectPosition","verticalAlign",
-    "inset","left","right","bottom","top","opacity","boxShadow","boxSizing",
-    "width","height","maxHeight","maxWidth","minHeight","minWidth",
-    //"flex","flexBasis","flexDirection","flexFlow","flexGrow","flexShrink","flexWrap",
-    "justifyContent","justifyItems","justifySelf","order","direction",
-    "float","display","alignItems","alignContent","alignSelf","alignmentBaseline",
-    "background", "backgroundColor", "backgroundImage", "backgroundPosition", "backgroundSize","backgroundRepeat",
-    //"backgroundAttachment","backgroundBlendMode","backgroundClip","backgroundOrigin","backgroundPositionX","backgroundPositionY",
-    "margin","marginBottom","marginLeft","marginRight","marginTop",//margin
-    "padding","paddingBottom","paddingLeft","paddingRight","paddingTop",//padding
-    //"perspective","perspectiveOrigin","transform","transformBox","transformOrigin","transformStyle",
-    //"content","clip","clipPath","clipRule","clear","outline"
+    "overflowAnchor", "overflowWrap", "overflow", "overflowX", "overflowY", "textOverflow", "textDecoration",
+    "visibility", "zoom", "zIndex", "objectFit", "objectPosition", "verticalAlign",
+    "inset", "left", "right", "bottom", "top", "opacity", "boxShadow", "boxSizing",
+    "width", "height", "maxHeight", "maxWidth", "minHeight", "minWidth",
+    "flex","flexBasis","flexDirection","flexFlow","flexGrow","flexShrink","flexWrap",
+    "justifyContent", "justifyItems", "justifySelf", "order", "direction",
+    "float", "display", "alignItems", "alignContent", "alignSelf", "alignmentBaseline",
+    "background", "backgroundColor", "backgroundImage", "backgroundPosition", "backgroundSize", "backgroundRepeat",
+    "backgroundAttachment","backgroundBlendMode","backgroundClip","backgroundOrigin","backgroundPositionX","backgroundPositionY",
+    "margin", "marginBottom", "marginLeft", "marginRight", "marginTop",//margin
+    "padding", "paddingBottom", "paddingLeft", "paddingRight", "paddingTop",//padding
+    "perspective","perspectiveOrigin","transform","transformBox","transformOrigin","transformStyle",
+    "content","clip","clipPath","clipRule","clear","outline"
 ];
 export default [
     ...fontStyle,
     ...border,
     ...boxStyle
 ]
-    

@@ -1,8 +1,8 @@
 <template>
-    <div class='bot_task'>
+    <div class='bot_task' id="printMe">
         <div class='begain' @click="newPrint">打印</div>
         <el-table
-        id="printMe"
+       
     :data="tableData"
     stripe
     style="width: 100%">

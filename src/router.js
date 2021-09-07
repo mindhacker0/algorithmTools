@@ -26,6 +26,12 @@ export default new Router({
             component: (resolve) => {
                 require(['./views/login.vue'], resolve);
             }
+        },{
+            path: '/canvas-test',
+            name:'canvas-test',
+            component: (resolve) => {
+                require(['./views/canvasTest'], resolve);
+            }
         }
     ]
 });

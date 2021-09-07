@@ -83,8 +83,8 @@ class Print{
         let iframe = document.createElement('iframe');
         iframe.style.border = '0px';
         iframe.style.position = 'absolute';
-        iframe.style.width = '100%';
-        iframe.style.height = '400px';
+        iframe.style.width = '0px';
+        iframe.style.height = '0px';
         iframe.style.right = '0px';
         iframe.style.top = '0px';
         iframe.setAttribute('id', "printjs-iframe");
@@ -94,7 +94,9 @@ class Print{
             iframe.contentDocument.write(`${this.docType}<html>${this.head}<body></body></html>`);
             iframe.contentDocument.body.append(this.body);
             iframe.contentWindow.print();
-            console.log(iframe);
+            setTimeout(()=>{
+                document.body.removeChild(iframe);
+            });
         }
         this.frame = iframe;
     }
