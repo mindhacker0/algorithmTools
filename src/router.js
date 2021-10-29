@@ -32,6 +32,36 @@ export default new Router({
             component: (resolve) => {
                 require(['./views/canvasTest'], resolve);
             }
+        },{
+            path: '/openGL-test',
+            name:'openGL-test',
+            component: (resolve) => {
+                require(['./views/openGLTest'], resolve);
+            }
+        },{
+            path: '/applicateList',
+            name:'applicate-list',
+            component: (resolve) => {
+                require(['./views/applicateList'], resolve);
+            },
+        },{
+            path: '/applicateList-edit',
+            name:'applicate-list-edit',
+            component: (resolve) => {
+                require(['./views/applicateList/edit'], resolve);
+            },
+        },{
+            path: '/applicateList-material',
+            name:'applicate-list-material',
+            component: (resolve) => {
+                require(['./views/applicateList/material'], resolve);
+            },
+        },{
+            path: '/applicateList-question',
+            name:'applicate-list-question',
+            component: (resolve) => {
+                require(['./views/applicateList/question'], resolve);
+            },
         }
     ]
 });

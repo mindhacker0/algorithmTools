@@ -4,12 +4,16 @@
         <div class="toolWrap">
             <div @click="loadFile" class="button"><span>打开</span></div>
             <div @click="reverseFilter" class="button"><span>反色</span></div>
-            <div @click="grayScaleFilter" class="button"><span>模糊</span></div>
+            <div @click="blurFilter" class="button"><span>模糊</span></div>
+            <div @click="mosicArea" class="button"><span>马赛克</span></div>
         </div>
     </div>
 </template>
 <script>
 import {openFile} from "../../utils/public";
+import {ImageFilter} from "../../utils/Graph";
+import {Rect} from "../../utils/Graph/shape";
+import {reverseFilter,blurFilter,mosicArea} from "../../utils/Graph/process";
 export default {
     name:'canvas-test',
     comments:{
@@ -25,8 +29,9 @@ export default {
         }
     },mounted() {
         let image = localStorage.getItem("imageCache");
-        if(image){this.image = image;}
+        if(image){this.image = image;this.drawImage(this.image);}
         this.context = this.$refs.drawboard.getContext("2d");
+        // this.addCircle()
     },
     methods: {
         loadFile(){
@@ -61,42 +66,59 @@ export default {
                 vm.context.drawImage(image,offsetLeft,offsetTop);
                 vm.drawList.push({
                     type:"image",
-                    x:offsetLeft,
-                    y:offsetTop,
-                    width:this.width,
-                    height:this.height
-                })
+                    position:new Rect(offsetLeft,offsetTop,this.width,this.height)
+                });
             }
         },
         reverseFilter(){//反色滤镜
-            let {x,y,width,height} = this.drawList[0];
-            let imageData = this.context.getImageData(x, y,width/2,height/2);
-            let data = imageData.data;
-            for(var i=0;i<data.length;i+=4){
-                var r = data[i];
-                var g = data[i+1];
-                var b = data[i+2];
-                data[i] = 255 - r;
-                data[i+1] = 255 - g;
-                data[i+2] = 255 - b;
-            }
-            console.log(imageData);
-            this.context.putImageData(imageData,x,y);
+            let filter = new ImageFilter(this.context,this.drawList[0].position);
+            filter.useFilter(reverseFilter);
         },
-        grayScaleFilter(){
-            let {x,y,width,height} = this.drawList[0];
-            let imageData = this.context.getImageData(x, y,width/2,height/2);
-            let data = imageData.data;
-            let dataW = imageData.width,dataH = imageData.height;
-            for(var i=0;i<data.length;i+=4){
-                var r = data[i];
-                var g = data[i+1];
-                var b = data[i+2];
-                data[i] = (r+data[i+4]+data[i-4])/3;
-                data[i+1] = (g+data[i+5]+data[i-3])/3;
-                data[i+2] = (b+data[i+6]+data[i-2])/3;
+        blurFilter(){
+            let filter = new ImageFilter(this.context,this.drawList[0].position);
+            filter.useFilter(blurFilter,20);
+        },
+        mosicArea(){
+            let filter = new ImageFilter(this.context,this.drawList[0].position);
+            filter.useFilter(mosicArea);
+        },
+        async addCircle(from = 0){
+            const {context:ctx} = this;
+            drawBlinkCircle(ctx,[100,100],100);
+            drawBlinkCircle(ctx,[300,100],100);
+            drawBlinkCircle(ctx,[500,100],100);
+            function drawBlinkCircle(ctx,point,radius){
+                let blinkRange = [75,95];//闪动的半径范围
+                let tickStep = 2;//动画每次执行增加的半径
+                let perCycle = 6;
+                let x = point[0],y = point[1];
+                async function draw(add,count){
+                    count++;
+                    if(count%perCycle === 0){
+                        console.log(add,count);
+                        add+=tickStep;
+                        ctx.save();
+                        ctx.beginPath();
+                        let start = blinkRange[0] + add%(blinkRange[1] - blinkRange[0]);
+                        let gradient = ctx.createRadialGradient(x,y,start, x,y,radius);
+                        gradient.addColorStop(0,'white');
+                        gradient.addColorStop(.9,'rgba(255,255,0,0.3)');
+                        gradient.addColorStop(1,'white');
+                        ctx.fillStyle = gradient;
+                        ctx.arc(x, y, radius, 0, 2*Math.PI);
+                        ctx.fill();
+                        ctx.closePath();
+                        ctx.restore();
+                    }
+                    requestAnimationFrame(draw.bind(null,add,count));
+                }
+                draw(0,0);
             }
-            this.context.putImageData(imageData,x,y);
+            function sleep(time){
+                return new Promise((resolve,reject)=>{
+                    setTimeout(function(){resolve()},time);
+                });
+            }
         }
     },
 }
