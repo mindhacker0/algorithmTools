@@ -78,14 +78,16 @@
                          style="padding:10px 30px;border-right:1px soild #000">
                         <div class="title">添加材料</div>
                         <!-- 添加的数据 -->
-                        <div>
+                        <div ref="rightBox">
                             <div class="right-item"
+                                :class="{empty:item.id===null}"
                                  v-for="(item,index) in addData"
+                                 @mousedown="handleMouseDown($event,index)"
                                  :key="item.id">
-                                <div class="item-title">
+                                <div class="item-title" v-if="item.id">
                                     材料{{index+1}}
                                 </div>
-                                <div class="item-content">
+                                <div class="item-content" v-if="item.id">
                                     <div class="material-name">{{item.name}}</div>
                                     <div class="cancel-icon"
                                          @click="cancelMaterial(index)">✖</div>
@@ -203,6 +205,64 @@ export default {
     },
     mounted() {},
     methods: {
+        handleMouseDown(event,index){
+            let _this = this;
+            let {position,elem} = this.calcItemPosition(this.$refs.rightBox,index);
+            let direction = 0;
+            let handleMove = null;
+            let handleUp = null;
+            let emptyBox = null;//第几个元素是空元素
+            let width = elem.offsetWidth;
+            let posx = event.pageX - elem.offsetLeft,posy = event.pageY - elem.offsetTop;
+            document.body.addEventListener("mousemove",handleMove = function(e){
+                let posx_new = e.pageX - posx;
+                let posy_new = e.pageY - posy;
+                elem.style.transform="rotate(30deg)";
+                elem.style.position="absolute";
+                elem.style.width=`${width}px`;
+                elem.style.left = posx_new + "px";//使得被拖放元素跟随鼠标移动
+                elem.style.top = posy_new + "px";
+                let {pageY} = e;
+                for(let {top,height,index} of position){
+                    if(top < pageY && pageY < top+height){//高度在某个盒子范围内
+                        if(emptyBox === null){
+                            if(index!==position.length-1){
+                                _this.addData.splice(index,0,{id:null});
+                            }else{
+                                _this.addData.push({id:null});
+                            }
+                            emptyBox = index+1;
+                        }else if(index!==(emptyBox-1)){
+                            if(index === emptyBox){index++;direction = -1;}
+                            let temp = _this.addData[emptyBox];
+                            _this.addData[emptyBox] = _this.addData[index];
+                            _this.addData[index] = temp;
+                            emptyBox = index;
+                        }
+                    }
+                }
+                document.body.addEventListener("mouseup",handleUp = function(e){
+                    elem.removeAttribute("style");
+                    _this.addData = _this.addData.filter(({id})=>id!==null);
+                    emptyBox = null;
+                    document.body.removeEventListener("mousemove",handleMove);
+                    document.body.removeEventListener("mouseup",handleUp);
+                });
+            });
+        },
+        calcItemPosition(parent,index){
+           let itemList = parent.getElementsByClassName("right-item");
+           let position = [];
+           for(let i=0;i<itemList.length;i++){
+                position.push({
+                    left:itemList[i].offsetLeft,
+                    top:itemList[i].offsetTop,
+                    height:itemList[i].offsetWidth,
+                    index:i
+                });
+           }
+           return {position,elem:itemList[index]};
+        },
         tableRowClassName({ row, rowIndex }) {
             if (this.addData.filter((v) => v.id == row.id).length) {
                 return "disable-row";
@@ -321,6 +381,9 @@ export default {
     font-size: 30px;
     margin: 0 auto;
     cursor: pointer;
+}
+.empty{
+    background: #e4e4e4;
 }
 </style>
 

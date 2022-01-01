@@ -62,6 +62,12 @@ export default new Router({
             component: (resolve) => {
                 require(['./views/applicateList/question'], resolve);
             },
+        },{
+            path: '/canvas-capture',
+            name:'canvas-capture',
+            component: (resolve) => {
+                require(['./views/canvasCaputure'], resolve);
+            },
         }
     ]
 });
