@@ -68,6 +68,12 @@ export default new Router({
             component: (resolve) => {
                 require(['./views/canvasCaputure'], resolve);
             },
+        },{
+            path: '/g6-test',
+            name:'g6-test',
+            component: (resolve) => {
+                require(['./views/graphG6'], resolve);
+            },
         }
     ]
 });
